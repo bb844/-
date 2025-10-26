@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages 部署指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a4b8c, #4a6b9c);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.7);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .step-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #4fc3f7;
+            color: #1a2a6c;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .step-card h3 {
+            color: #4fc3f7;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .step-card p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        .screenshot {
+            width: 100%;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tip {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning {
+            background: rgba(244, 67, 54, 0.2);
+            border-left: 4px solid #f44336;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #2196f3;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 10px 5px;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #0d8bf2;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #2196f3;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(33, 150, 243, 0.1);
+        }
+        
+        .center-buttons {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .faq-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+        
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        
+        .faq-question {
+            color: #4fc3f7;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .water-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.7;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            opacity: 0.7;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="water-bg" id="waterCanvas"></div>
+    
+    <div class="container">
+        <header>
+            <h1>GitHub Pages 部署指南</h1>
+            <p class="subtitle">学习如何将您的HTML文件免费部署到互联网，获得专属网址</p>
+            <div class="center-buttons">
+                <a href="https://github.com" class="btn" target="_blank">前往 GitHub</a>
+                <a href="#steps" class="btn btn-secondary">查看教程</a>
+            </div>
+        </header>
+        
+        <div class="steps-container" id="steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>创建GitHub账户</h3>
+                <p>如果您还没有GitHub账户，首先需要注册一个。</p>
+                <div class="code-block">
+                    // 访问 github.com<br>
+                    // 点击 "Sign up" 注册新账户<br>
+                    // 填写用户名、邮箱和密码<br>
+                    // 完成验证步骤
+                </div>
+                <div class="tip">
+                    <strong>提示：</strong> 用户名将成为您网址的一部分，请谨慎选择。
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>创建新仓库</h3>
+                <p>仓库是用来存储代码的地方。</p>
+                <div class="code-block">
+                    // 登录GitHub后<br>
+                    // 点击右上角 "+" 图标<br>
+                    // 选择 "New repository"<br>
+                    // 输入仓库名称<br>
+                    // 选择 "Public"（公开）<br>
+                    // 勾选 "Add a README file"<br>
+                    // 点击 "Create repository"
+                </div>
+                <div class="tip">
+                    <strong>重要：</strong> 如果希望网址是 username.github.io，仓库名必须与此完全一致。
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>上传HTML文件</h3>
+                <p>将您的HTML文件上传到仓库中。</p>
+                <div class="code-block">
+                    // 进入创建的仓库<br>
+                    // 点击 "Add file" → "Upload files"<br>
+                    // 拖拽或选择HTML文件<br>
+                    // 在底部输入提交信息<br>
+                    // 点击 "Commit changes"
+                </div>
+                <div class="warning">
+                    <strong>注意：</strong> 主页文件必须命名为 index.html 才能自动识别。
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>启用GitHub Pages</h3>
+                <p>开启页面生成功能。</p>
+                <div class="code-block">
+                    // 进入仓库 → "Settings"<br>
+                    // 左侧菜单找到 "Pages"<br>
+                    // 在 "Source" 下选择分支<br>
+                    // 选择 "main" 或 "master" 分支<br>
+                    // 选择 "/ (root)" 文件夹<br>
+                    // 点击 "Save"
+                </div>
+                <div class="tip">
+                    <strong>提示：</strong> 保存后稍等几分钟，系统会生成您的网站地址。
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h3>访问您的网站</h3>
+                <p>使用生成的网址访问您的网站。</p>
+                <div class="code-block">
+                    // 网址格式：<br>
+                    https://用户名.github.io/仓库名
+                </div>
+                <p>如果仓库名是 username.github.io，则网址为：</p>
+                <div class="code-block">
+                    https://用户名.github.io
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">6</div>
+                <h3>更新网站内容</h3>
+                <p>如何更新已部署的网站。</p>
+                <div class="code-block">
+                    // 修改本地HTML文件<br>
+                    // 返回GitHub仓库<br>
+                    // 点击文件 → 编辑图标<br>
+                    // 粘贴新内容<br>
+                    // 提交更改<br>
+                    // 网站将自动更新
+                </div>
+                <div class="tip">
+                    <strong>提示：</strong> 更新可能需要几分钟才能在网站上显示。
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-section">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #4fc3f7;">常见问题解答</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: GitHub Pages 是免费的吗？</div>
+                <p>A: 是的，GitHub Pages 完全免费使用，支持自定义域名。</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: 我的网站网址是什么？</div>
+                <p>A: 有两种格式：<br>
+                   - 普通仓库：https://用户名.github.io/仓库名<br>
+                   - 特殊仓库：https://用户名.github.io (仓库名必须为 用户名.github.io)</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: 上传后网站不显示怎么办？</div>
+                <p>A: 请检查：<br>
+                   - 文件名是否为 index.html<br>
+                   - 是否在设置中启用了GitHub Pages<br>
+                   - 是否选择了正确的分支和文件夹<br>
+                   - 等待5-10分钟让更改生效</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: 可以绑定自己的域名吗？</div>
+                <p>A: 可以！在仓库设置Pages部分添加自定义域名，并在域名服务商处配置CNAME记录。</p>
+            </div>
+        </div>
+        
+        <div class="center-buttons">
+            <a href="https://github.com" class="btn" target="_blank">开始使用 GitHub</a>
+            <a href="https://pages.github.com" class="btn btn-secondary" target="_blank">官方文档</a>
+        </div>
+        
+        <footer>
+            <p>© 2023 GitHub Pages 部署指南 | 让您的网页拥有专属网址</p>
+        </footer>
+    </div>
+
+    <script>
+        // 水波背景效果
+        const canvas = document.getElementById('waterCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        const waves = [];
+        const waveCount = 3;
+        
+        for (let i = 0; i < waveCount; i++) {
+            waves.push({
+                y: canvas.height * 0.7 + Math.random() * 100,
+                length: 0.01 + Math.random() * 0.01,
+                amplitude: 15 + Math.random() * 20,
+                frequency: 0.001 + Math.random() * 0.002,
+                phase: Math.random() * Math.PI * 2,
+                speed: 0.1 + Math.random() * 0.2
+            });
+        }
+        
+        function drawWater() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#1a2a6c');
+            gradient.addColorStop(0.5, '#2a4b8c');
+            gradient.addColorStop(1, '#4a6b9c');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < waves.length; i++) {
+                const wave = waves[i];
+                
+                ctx.beginPath();
+                ctx.moveTo(0, wave.y);
+                
+                for (let x = 0; x < canvas.width; x++) {
+                    const y = wave.y + Math.sin(x * wave.length + wave.phase) * wave.amplitude;
+                    ctx.lineTo(x, y);
+                }
+                
+                ctx.lineTo(canvas.width, canvas.height);
+                ctx.lineTo(0, canvas.height);
+                ctx.closePath();
+                
+                const alpha = 0.05 + (i * 0.03);
+                ctx.fillStyle = `rgba(100, 180, 255, ${alpha})`;
+                ctx.fill();
+                
+                wave.phase += wave.speed;
+            }
+            
+            requestAnimationFrame(drawWater);
+        }
+        
+        drawWater();
+        
+        // FAQ 交互
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
